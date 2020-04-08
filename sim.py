@@ -12,11 +12,11 @@ RECOVERED = 2
 
 def color(state):
     if state == SUSCEPTIBLE:
-        return (0, 0, 255)
+        return (134, 205, 242)
     elif state == INFECTED:
-        return (255, 0, 0)
+        return (246, 150, 121)
     else:
-        return (0, 255, 0)
+        return (157, 135, 186)
 
 class Agent():
 
