@@ -3,12 +3,15 @@
 
 import pygame
 import random as rd
+import math
+import pygame.math
 
 rd.seed(69)
 
 SUSCEPTIBLE = 0
 INFECTED = 1
 RECOVERED = 2
+
 
 def color(state):
     if state == SUSCEPTIBLE:
@@ -24,13 +27,43 @@ class Agent():
         self.id = id
         self.state = state
         self.color = color(state)
-        self.x_pos = rd.randint(1, ctrl.x_size - 1)
-        self.y_pos = rd.randint(1, ctrl.y_size - 1)
-        self.speed = 10
-        self.size = 7
+        self.pos = [rd.randint(1, ctrl.x_size - 1), rd.randint(1, ctrl.y_size - 1)]
+        self.speed = 2
+        self.size = 10
+        self.dir = 0
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, [self.x_pos, self.y_pos], self.size)
+        pygame.draw.circle(screen, self.color, self.pos, self.size)
+
+    def move(self, ctrl):
+        self.dir = rd.randint(1, 4)
+
+        if self.dir == 1:
+            self.pos[0] += self.speed
+        elif self.dir == 2:
+            self.pos[0] -= self.speed
+        elif self.dir == 3:
+            self.pos[1] += self.speed
+        else:
+            self.pos[1] -= self.speed
+        
+    def infect(self):
+        return
+        
+    def recover_check(self):
+        return
+        
+    def death_check(self):
+        return
+        
+        
+class Disease():
+
+    def __init__(self, infect_radius, infect_chance, recovery_time):
+        self.infect_radius = infect_radius
+        self.infect_chance = infect_chance
+        self.recovery_time = recovery_time
+        
 
         
 class Controller():
@@ -63,9 +96,10 @@ while ctrl.running:
         if event.type == pygame.QUIT:
             ctrl.running = False
 
-    screen.fill((255, 255, 255))
+    screen.fill((0, 0, 0))
 
     for agent in agents:
+        agent.move(ctrl)
         agent.draw(screen)
 
     pygame.display.flip()
