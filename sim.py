@@ -6,12 +6,19 @@ import random as rd
 import math
 import pygame.math
 
+from pygame.locals import *
+
+vec = pygame.math.Vector2
+
 rd.seed(69)
 
 SUSCEPTIBLE = 0
 INFECTED = 1
 RECOVERED = 2
 
+MAX_SPEED = 3
+
+DIRECTION_CHANGE_CHANCE = 0.05
 
 def color(state):
     if state == SUSCEPTIBLE:
@@ -21,20 +28,63 @@ def color(state):
     else:
         return (157, 135, 186)
 
-class Agent():
+class Agent(pygame.sprite.Sprite):
 
     def __init__(self, id, state, ctrl):
+        pygame.sprite.Sprite.__init__(self)
         self.id = id
         self.state = state
         self.color = color(state)
-        self.pos = [rd.randint(1, ctrl.x_size - 1), rd.randint(1, ctrl.y_size - 1)]
-        self.speed = 2
+        self.pos = vec(rd.randint(1, ctrl.x_size - 1), rd.randint(1, ctrl.y_size - 1))
+        #self.speed = 2
         self.size = 10
-        self.dir = 0
-
-    def draw(self, screen):
+        self.image = pygame.Surface((self.size, self.size))
         pygame.draw.circle(screen, self.color, self.pos, self.size)
+        self.rect = self.image.get_rect(center=self.pos)
+        self.vel = vec(0, 0)
+        self.accel = vec(0, -0.2)
+        self.angle_speed = 0
+        self.angle = 0
 
+    def update(self):
+        if self.state = INFECTED:
+            self.recover_check()
+
+        if rd.random() > DIRECTION_CHANGE_CHANCE:
+            self.change_dir()
+
+        self.vel += self.accel
+
+        if self.vel.length() > MAX_SPEED:
+            self.vel.scale_to_length(MAX_SPEED)
+
+        self.pos += self.vel
+        self.rect.center = self.position
+
+    def change_dir(self):
+        if rd.random() > 0.5:
+            self.angle_speed = 5
+        else:
+            self.angle_speed = -5
+
+        self.rotate()
+
+        
+    def rotate(self):
+        self.accel.rotate_ip(self.angle_speed)
+
+        self.angle += self.angle_speed
+
+        if self.angle > 360:
+            self.angle -= 360
+        elif self.angle < 0:
+            self.angle += 360
+            
+        self.image = pygame.transform.rotate(self.original_image, -self.angle)
+
+        self.rect = self.image.get_rect(center=self.rect.center)
+        
+        
     def move(self, ctrl):
         self.dir = rd.randint(1, 4)
 
@@ -76,13 +126,16 @@ class Controller():
         self.running = True
 
 
+
+        
 pygame.init()
 
 ctrl = Controller(885, 600, 250, 10)
 
 screen = pygame.display.set_mode([ctrl.x_size, ctrl.y_size])
+clock = pygame.time.Clock()
 
-agents = list()
+all_agents = pygame.sprite.Group()
 
 for i in range(0, ctrl.agent_count):
     if i < ctrl.starting_infected:
@@ -96,11 +149,10 @@ while ctrl.running:
         if event.type == pygame.QUIT:
             ctrl.running = False
 
+
     screen.fill((0, 0, 0))
 
-    for agent in agents:
-        agent.move(ctrl)
-        agent.draw(screen)
+    all_agents.update()
 
     pygame.display.flip()
 
