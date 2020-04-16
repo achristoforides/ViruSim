@@ -13,6 +13,7 @@ if __name__ == "__main__":
 
     pygame.font.init()
     UI_TITLE_FONT = pygame.font.SysFont('Consolas', 32)
+    STATS_FONT = pygame.font.SysFont('Consolas', 18)
 
     # Create the window
     surface = pygame.display.set_mode(size=app_dimensions, flags=pygame.DOUBLEBUF)
@@ -30,6 +31,11 @@ if __name__ == "__main__":
     param_panel = UIPanel(15, 380, 350, 325, (0, 255, 0), 'Parameters', UI_TITLE_FONT, (0, 0, 0))
     simul_panel = UIPanel(380, 15, 885, 600, (0, 0, 255), 'Simulation Area', UI_TITLE_FONT, (0, 0, 0))
     stats_panel = UIPanel(380, 630, 885, 75, (0, 255, 255), 'Statistics', UI_TITLE_FONT, (0, 0, 0))
+
+    STATS_PADDING = 30
+    susceptible_text = STATS_FONT.render("Susceptible: 0", True, (0, 0, 0))
+    infected_text = STATS_FONT.render("Infected: 0", True, (0, 0, 0))
+    removed_text = STATS_FONT.render("Removed: 0", True, (0, 0, 0))
 
     # UI max values
     max_infection_chance = 1.0
@@ -73,8 +79,15 @@ if __name__ == "__main__":
         stats_panel.draw(surface)
         stats_panel.render_panel_title_text(surface)
 
+        # Draw stats text
+        surface.blit(susceptible_text, (395, 630 + stats_panel.get_title_height()))
+        surface.blit(infected_text, (STATS_PADDING + 395 + susceptible_text.get_width(), 630 + stats_panel.get_title_height()))
+        surface.blit(removed_text, (STATS_PADDING * 2 + 395 + susceptible_text.get_width() + infected_text.get_width(), 630 + stats_panel.get_title_height()))        
+        
         # Draw UI Elements
         param_box.blit()
             
         # Update the window
         pygame.display.update()
+
+        clock.tick(60)
