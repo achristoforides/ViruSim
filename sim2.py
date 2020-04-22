@@ -23,9 +23,9 @@ BLUE = (134, 205, 242)
 RED = (246, 150, 121)
 PURPLE = (157, 135, 186)
 
-POPULATION_DENSITY = 0.5
+POPULATION_DENSITY = 0.2
 RADIUS = 1
-INFECT_CHANCE = 0.01
+INFECT_CHANCE = 0.001
 RECOVERY_CHANCE = 0.0005
 STARTING_INFECTED = 5
 
@@ -81,7 +81,7 @@ class Agent():
                             grid[row][col].disease = Disease(orig_radius, orig_infect_chance, orig_recovery_chance)
                         
             for i in range(1, (radius * 2) + 1):
-                col = col + i
+                col = col + 1
 
                 if random.random() < orig_infect_chance:
                     if valid_index(row, col):
@@ -90,7 +90,7 @@ class Agent():
                                 grid[row][col].disease = Disease(orig_radius, orig_infect_chance, orig_recovery_chance)
 
             for i in range(1, (radius * 2) + 1):
-                row = row + i
+                row = row + 1
 
                 if random.random() < orig_infect_chance:
                     if valid_index(row, col):
@@ -99,7 +99,7 @@ class Agent():
                                 grid[row][col].disease = Disease(orig_radius, orig_infect_chance, orig_recovery_chance)
         
             for i in range(1, (radius * 2) + 1):
-                col = col - i
+                col = col - 1
 
                 if random.random() < orig_infect_chance:
                     if valid_index(row, col):
@@ -111,7 +111,7 @@ class Agent():
                             print(str(row) +", "+ str(col))
 
             for i in range(1, (radius * 2) + 1):
-                row = row - i
+                row = row - 1
 
                 if random.random() < orig_infect_chance:
                     if valid_index(row, col):
