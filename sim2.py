@@ -131,7 +131,6 @@ class Agent():
         return
 
 class Disease():
-
     def __init__(self, radius, infect_chance, recovery_chance):
         self.radius = radius
         self.infect_chance = infect_chance
