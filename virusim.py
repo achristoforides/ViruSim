@@ -115,6 +115,12 @@ class Agent():
         
         return
 
+    def get_disease(self):
+        return self.disease
+
+    def set_disease(self, disease):
+        self.disease = disease
+
 class Disease():
 
     def __init__(self, radius, infect_chance, recovery_chance):
@@ -320,8 +326,26 @@ def restart_simulation():
     sim_running = True
 
 def pause_simulation():
+    global grid
     global sim_running
+    global infection_chance_slider
+    global infection_radius_slider
+    global recovery_chance_slider
+
+    global RADIUS
+    global INFECT_CHANCE
+    global RECOVERY_CHANCE
+    
     sim_running = not sim_running
+    INFECT_CHANCE = float(infection_chance_slider.get_value())
+    RADIUS = int(infection_radius_slider.get_value())
+    RECOVERY_CHANCE = float(recovery_chance_slider.get_value())
+
+    if sim_running == True:
+        for r in grid:
+            for c in r:
+                if c != None and c.get_disease() != None:
+                    c.set_disease(Disease(RADIUS, INFECT_CHANCE, RECOVERY_CHANCE))
 
 if __name__ == "__main__":
     running = True
